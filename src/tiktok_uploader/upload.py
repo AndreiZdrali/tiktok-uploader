@@ -360,9 +360,9 @@ def complete_upload_form(
     """
     _go_to_upload(page)
     _remove_cookies_window(page)
-    _remove_new_feature_modal(page)
 
     _set_video(page, path=path, num_retries=num_retries, **kwargs)
+    _remove_new_feature_modal(page)
 
     if cover_path:
         _set_cover(page, cover_path)
@@ -377,7 +377,7 @@ def complete_upload_form(
     if product_id:
         _add_product_link(page, product_id)
     
-    # sa fim siguri ca nu mai e modal
+    # sa fim siguri ca nu mai e asta
     _remove_new_feature_modal(page)
     _post_video(page)
 
