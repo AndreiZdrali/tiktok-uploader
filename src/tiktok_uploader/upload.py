@@ -360,6 +360,7 @@ def complete_upload_form(
     """
     _go_to_upload(page)
     _remove_cookies_window(page)
+    _remove_new_feature_modal(page)
 
     _set_video(page, path=path, num_retries=num_retries, **kwargs)
 
@@ -375,6 +376,9 @@ def complete_upload_form(
         _set_schedule_video(page, schedule)
     if product_id:
         _add_product_link(page, product_id)
+    
+    # sa fim siguri ca nu mai e modal
+    _remove_new_feature_modal(page)
     _post_video(page)
 
 
@@ -534,6 +538,21 @@ def _remove_cookies_window(page: Page) -> None:
             const banner = document.querySelector("{config.selectors.upload.cookies_banner.banner}");
             if (banner) banner.remove();
         """)
+
+
+def _remove_new_feature_modal(page: Page) -> None:
+    """
+    Removes the 'Try this new feature' modal if it is open
+    """
+    logger.debug(green("Checking for 'Try this new feature' modal"))
+    try:
+        # Locates the exact 'Got it' button by role and name (which handles nested text like in a div)
+        button = page.get_by_role("button", name="Got it").first
+        if button.is_visible(timeout=3000):
+            button.click()
+            logger.debug(green("Closed 'Try this new feature' modal"))
+    except Exception:
+        pass
 
 
 def _remove_split_window(page: Page) -> None:
